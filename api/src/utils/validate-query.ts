@@ -76,13 +76,21 @@ function validateFilter(filter: Query['filter']) {
 					validateFilter(nested);
 					break;
 				case '_eq':
+				case '_ieq':
 				case '_neq':
+				case '_nieq':
 				case '_contains':
+				case '_icontains':
 				case '_ncontains':
+				case '_nicontains':
 				case '_starts_with':
+				case '_istarts_with':
 				case '_nstarts_with':
+				case '_nistarts_with':
 				case '_ends_with':
+				case '_iends_with':
 				case '_nends_with':
+				case '_niends_with':
 				case '_gt':
 				case '_gte':
 				case '_lt':

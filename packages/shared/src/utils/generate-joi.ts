@@ -107,8 +107,21 @@ export function generateJoi(filter: FieldFilter | null, options?: JoiOptions): A
 			schema[key] = getAnySchema().equal(compareValue);
 		}
 
+		if (operator === '_ieq') {
+			schema[key] = getStringSchema().pattern(new RegExp(`^${escapeRegExp(Object.values(value)[0] as string)}$`, 'i'), {
+				name: '_ieq',
+			});
+		}
+
 		if (operator === '_neq') {
 			schema[key] = getAnySchema().not(compareValue);
+		}
+
+		if (operator === '_nieq') {
+			schema[key] = getStringSchema().pattern(new RegExp(`^${escapeRegExp(Object.values(value)[0] as string)}$`, 'i'), {
+				name: '_ieq',
+				invert: true,
+			});
 		}
 
 		if (operator === '_contains') {
@@ -135,6 +148,13 @@ export function generateJoi(filter: FieldFilter | null, options?: JoiOptions): A
 			}
 		}
 
+		if (operator === '_nicontains') {
+			schema[key] = getStringSchema().pattern(new RegExp(`${escapeRegExp(Object.values(value)[0] as string)}.*`, 'i'), {
+				name: '_nicontains',
+				invert: true,
+			});
+		}
+
 		if (operator === '_starts_with') {
 			if (compareValue === null || compareValue === undefined || typeof compareValue !== 'string') {
 				schema[key] = Joi.any().equal(true);
@@ -143,6 +163,15 @@ export function generateJoi(filter: FieldFilter | null, options?: JoiOptions): A
 					name: 'starts_with',
 				});
 			}
+		}
+
+		if (operator === '_istarts_with') {
+			schema[key] = getStringSchema().pattern(
+				new RegExp(`^${escapeRegExp(Object.values(value)[0] as string)}.*`, 'i'),
+				{
+					name: 'istarts_with',
+				}
+			);
 		}
 
 		if (operator === '_nstarts_with') {
@@ -156,6 +185,16 @@ export function generateJoi(filter: FieldFilter | null, options?: JoiOptions): A
 			}
 		}
 
+		if (operator === '_nistarts_with') {
+			schema[key] = getStringSchema().pattern(
+				new RegExp(`^${escapeRegExp(Object.values(value)[0] as string)}.*`, 'i'),
+				{
+					name: 'istarts_with',
+					invert: true,
+				}
+			);
+		}
+
 		if (operator === '_ends_with') {
 			if (compareValue === null || compareValue === undefined || typeof compareValue !== 'string') {
 				schema[key] = Joi.any().equal(true);
@@ -164,6 +203,15 @@ export function generateJoi(filter: FieldFilter | null, options?: JoiOptions): A
 					name: 'ends_with',
 				});
 			}
+		}
+
+		if (operator === '_iends_with') {
+			schema[key] = getStringSchema().pattern(
+				new RegExp(`.*${escapeRegExp(Object.values(value)[0] as string)}$`, 'i'),
+				{
+					name: 'iends_with',
+				}
+			);
 		}
 
 		if (operator === '_nends_with') {
@@ -175,6 +223,16 @@ export function generateJoi(filter: FieldFilter | null, options?: JoiOptions): A
 					invert: true,
 				});
 			}
+		}
+
+		if (operator === '_niends_with') {
+			schema[key] = getStringSchema().pattern(
+				new RegExp(`.*${escapeRegExp(Object.values(value)[0] as string)}$`, 'i'),
+				{
+					name: 'iends_with',
+					invert: true,
+				}
+			);
 		}
 
 		if (operator === '_in') {
